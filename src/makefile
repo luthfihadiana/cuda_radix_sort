@@ -11,12 +11,12 @@ all : program1 program3
 
 program1 : 
 	@echo "Compile your program radix_sort_cuda"
-	${COMP1} ${INPT1} -o ${OUTP1} -lm
+	${COMP1} ${INPT1} -o ${OUTP1}
 	@echo "Your program are ready"
 
 program3 : 
 	@echo "Compile your program radix_sort_serial"
-	${COMP2} -o ${OUTP3} ${INPT3}
+	${COMP} -o ${OUTP3} ${INPT3}
 	@echo "Your program are ready"
 
 clean :
