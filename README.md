@@ -1,5 +1,5 @@
-# OpenMP - Radix Sort
-## Praktikum 02 - IF3230 Sistem Paralel dan Terdistribusi
+# CUDA - Radix Sort
+## Praktikum 03 - IF3230 Sistem Paralel dan Terdistribusi
 ## Petunjuk Penggunaan
 ___
 ### Requirment
