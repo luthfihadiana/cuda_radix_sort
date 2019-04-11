@@ -31,7 +31,7 @@ int main(int argc,char *argv[]) {
     printf("flag 2\n");
     // aloocating array to be accessible by both cpu and gpu
     cudaMallocManaged(&global_array, data_size*sizeof(int)+1);
-    cudaMalloc(&local_array,data_size*sizeof(int)+1);
+    // cudaMalloc(&local_array,data_size*sizeof(int)+1);
     rng(global_array, data_size);
     // cudaMemcpy(d_a, a, sizeof(float) * N, cudaMemcpyHostToDevice);
     printf("flag 3\n");
@@ -47,6 +47,8 @@ int main(int argc,char *argv[]) {
     cudaMallocManaged(&global_bucket, bucket_el*sizeof(int)+1);
     empty_bucket(global_bucket,bucket_el);
     count_to_bucket<<<1,1>>>(global_array,global_bucket,data_size,0);
+    // Wait for GPU to finish before accessing on host
+    cudaDeviceSynchronize();
     print_array(global_bucket,bucket_el);
     cudaFree(global_array);
     // cudaFree(global_bucket);
