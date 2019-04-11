@@ -64,6 +64,7 @@ __global__
 void count_to_bucket(int * data, int * bucket, int length, int digit){
     int block = blockIdx.x;
     int thread = threadIdx.x;
+    printf("block %d thread %d\n", block, thread);
     for(int i = block*thread;  i < block*thread + thread && i < length; i++){
         int num_bucket = to_digit(data[i], digit);
         printf("%d [%d] %d\n", data[i], digit,  num_bucket);
