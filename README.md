@@ -5,13 +5,13 @@ ___
 ### Requirment
 Pengguna harus melakukan instalasi OpenMPI, Compiler bahasa c dan juga terinstall.
 ### Instalasi
-- Lakukan git clone https://gitlab.informatika.org/luthfihadiana/openmpi.git
+- Lakukan git clone https://gitlab.informatika.org/MustafaIlyas/cuda
 ``` bash
-git clone https://gitlab.informatika.org/luthfihadiana/openmpi.git
+git clone https://gitlab.informatika.org/MustafaIlyas/cuda
 ```
-- Masuk ke folder Openmpi
+- Masuk ke folder src
 ``` bash
-cd openmpi
+cd src
 ```
 - Lakukan makefile
 ``` bash
@@ -21,9 +21,10 @@ make
 ### Run Program
 Untuk menjalankan program, lakukan command dibawah 
 ```bash
-mpirun -np <banyak_proses> ./radix_openmpi <banyak_elemen>
+./radix_sort <banyak_elemen>
 ```
-_banyak-elemen_ adalah banyak elemen yang ingin dilakukan sort serta _banyak-process_ adalah jumlah proses yang akan dibangkitkan selama proses sorting ini.
+_banyak-elemen_ adalah banyak elemen yang ingin dilakukan sort 
+
 ## Pembagian Tugas
 ___
 1. ___Luthfi Ahmad Mujahid / 13516051___
@@ -38,6 +39,7 @@ ___
 - Laporan
 - Debugger
 - Fungsi utilitas
+
 ## Laporan
 ____
 ### Solusi Paralel

@@ -52,7 +52,9 @@ int main(int argc,char *argv[]) {
     }
     // Wait for GPU to finish before accessing on host
     cudaDeviceSynchronize();
-    countSort(global_array, global_bucket, data_size, max_digit);
+    for(int i = 0; i<=max_digit; i++){
+        countSort(global_array, global_bucket, data_size, i);
+    }
     print_array(global_bucket,bucket_el);
     cudaFree(global_array);
     //cudaFree(global_bucket);
@@ -76,31 +78,47 @@ void count_to_bucket(int * data, int * bucket, int length, int digit){
 
 
 __host__
+// void countSort(int * data, int * bucket, int length, int digit){
+//     int *local_sort = (int*) malloc (length * sizeof(int));
+//     int index = 0;
+
+//     // sort
+//     // printf("local sort ");
+//     for(int block =0; block < digit; block++){
+//         for(int d = 0; d < 10; d++){
+//             for(int j = 0; j < length; j++){
+//                 if(to_digit_host(data[j], block) == d){
+//                     local_sort[index] = data[j];
+//                     index ++;
+//                     bucket[block*10+d] --;
+//                 }
+    
+//                 if(bucket[block*10+d] == 0) {
+//                     // printf("\n");
+//                     break;
+//                 }    
+//             }
+//         }    
+//     }
+//     // printf("index ends in %d \n", index);
+
+//     // copy
+//     for(int i=0; i < length; i++){
+//         data[i] = local_sort[i];
+//     }
+//     free(local_sort);
+//    //empty_bucket(bucket, 10);
+// }
+
 void countSort(int * data, int * bucket, int length, int digit){
-    int *local_sort = (int*) malloc (length * sizeof(int));
+    int * local_sort = malloc (length * sizeof(int));
     int index = 0;
 
     // sort
     // printf("local sort ");
-    for(int block =0; block < digit; block++){
-        for(int d = 0; d < 10; d++){
-            for(int j = 0; j < length; j++){
-                if(to_digit_host(data[j], block) == d){
-                    local_sort[index] = data[j];
-                    index ++;
-                    bucket[block*10+d] --;
-                }
-    
-                if(bucket[block*10+d] == 0) {
-                    // printf("\n");
-                    break;
-                }    
-            }
-        }    
-    }
     for(int i =0; i < 10; i++){
         for(int j = 0; j < length; j++){
-            if(to_digit_host(data[j], digit) == i){
+            if(to_digit(data[j], digit) == i){
                 local_sort[index] = data[j];
                 index ++;
                 bucket[i] --;
@@ -119,9 +137,8 @@ void countSort(int * data, int * bucket, int length, int digit){
         data[i] = local_sort[i];
     }
     free(local_sort);
-   //empty_bucket(bucket, 10);
+    empty_bucket(bucket, 10);
 }
-
 __host__
 void empty_bucket(int * bucket, int size){
     for(int i = 0; i < size; i++){
