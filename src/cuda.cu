@@ -50,6 +50,7 @@ int main(int argc,char *argv[]) {
     cudaMallocManaged(&global_bucket, bucket_el*sizeof(int)+1);
     empty_bucket(global_bucket,bucket_el);
     for(int i = 0; i< base; i++){
+        printf("flag 5\n");
         count_to_bucket<<<numBlocks,numThread>>>(global_array,global_bucket,data_size,i);
     }
     // Wait for GPU to finish before accessing on host
