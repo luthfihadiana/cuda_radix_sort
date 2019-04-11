@@ -41,7 +41,7 @@ int main(int argc,char *argv[]) {
     printf("max digit %d\n", max_digit);
     int bucket_el = base*max_digit;
     cudaMallocManaged(&global_bucket, bucket_el*sizeof(int)+1);
-    count_to_bucket<<<1,1>>>(global_array,global_bucket,data_size,0);
+    count_to_bucket<<<1,1>>>(global_array,global_bucket,data_size,1);
     print_array(global_bucket,bucket_el);
     cudaFree(global_array);
     // cudaFree(global_bucket);
