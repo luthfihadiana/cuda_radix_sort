@@ -52,10 +52,11 @@ int main(int argc,char *argv[]) {
     }
     // Wait for GPU to finish before accessing on host
     cudaDeviceSynchronize();
-    for(int i = 0; i<=max_digit; i++){
+    for(int i = 0; i<max_digit; i++){
         countSort(global_array, global_bucket, data_size, i);
     }
     print_array(global_bucket,bucket_el);
+	print_array(global_array, data_size);
     cudaFree(global_array);
     //cudaFree(global_bucket);
     return 0;
@@ -111,20 +112,20 @@ __host__
 // }
 
 void countSort(int * data, int * bucket, int length, int digit){
-    int * local_sort = malloc (length * sizeof(int));
+    int * local_sort = (int*) malloc (length * sizeof(int));
     int index = 0;
 
     // sort
     // printf("local sort ");
     for(int i =0; i < 10; i++){
         for(int j = 0; j < length; j++){
-            if(to_digit(data[j], digit) == i){
+            if(to_digit_host(data[j], digit+1) == i){
                 local_sort[index] = data[j];
                 index ++;
-                bucket[i] --;
+                bucket[digit*10+i] --;
             }
 
-            if(bucket[i] == 0) {
+            if(bucket[digit*10+i] == 0) {
                 // printf("\n");
                 break;
             }
