@@ -24,13 +24,16 @@ int main(int argc,char *argv[]) {
     int numBlocks = (int) (data_size/1024) + 1;
     int *global_array;
     int *global_bucket;
+    int *local_array;
     int max_digit;
     int base= 10;
 
     printf("flag 2\n");
     // aloocating array to be accessible by both cpu and gpu
     cudaMallocManaged(&global_array, data_size*sizeof(int)+1);
+    cudaMalloc(&local_array,data_size*sizeof(int)+1);
     rng(global_array, data_size);
+    // cudaMemcpy(d_a, a, sizeof(float) * N, cudaMemcpyHostToDevice);
     printf("flag 3\n");
     printf("flag 4\n");
     // global_array = (*int )malloc(data_size * sizeof(int));
@@ -52,7 +55,7 @@ __global__
 void count_to_bucket(int * data, int * bucket, int length, int digit){
     for(int i = 0; i < length; i++){
         int num_bucket = to_digit(data[i], digit);
-        // printf("%d [%d] %d\n", data[i], digit,  num_bucket);
+        printf("%d [%d] %d\n", data[i], digit,  num_bucket);
         bucket[num_bucket] ++;
     }
 };
