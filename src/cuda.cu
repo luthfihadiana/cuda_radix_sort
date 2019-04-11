@@ -48,13 +48,14 @@ int main(int argc,char *argv[]) {
     cudaMallocManaged(&global_bucket, bucket_el*sizeof(int)+1);
     empty_bucket(global_bucket,bucket_el);
     for(int i = 1; i<= max_digit; i++){
-	count_to_bucket<<<numBlocks,numThread>>>(global_array,global_bucket,data_size,i);
+	    count_to_bucket<<<numBlocks,numThread>>>(global_array,global_bucket,data_size,i);
     }
     // Wait for GPU to finish before accessing on host
     cudaDeviceSynchronize();
+    countSort(global_array, global_bucket, data_size);
     print_array(global_bucket,bucket_el);
     cudaFree(global_array);
-    // cudaFree(global_bucket);
+    cudaFree(global_bucket);
     return 0;
 } 
 
@@ -65,10 +66,10 @@ void count_to_bucket(int * data, int * bucket, int length, int digit){
     int i = block*1000+thread;
 	// printf("block %d thread %d\n", digit, thread);
     //for(int i = (digit-1)*10 + thread;i <=(digit-1)*10+thread && i < length; i++){
-        if(block*1000+thread < length){
+    if(block*1000+thread < length){
 		int num_bucket = to_digit(data[i], digit) + 10*(digit-1);
-        	printf("%d [%d] %d\n", data[i], digit,  num_bucket);
-        	bucket[num_bucket] ++;
+        printf("%d [%d] %d\n", data[i], digit,  num_bucket);
+        bucket[num_bucket] ++;
 	}
     //}
 };
@@ -81,6 +82,22 @@ void countSort(int * data, int * bucket, int length, int digit){
 
     // sort
     // printf("local sort ");
+    for(int block =0; block < digit; block++){
+        for(int d = 0; d < 10; d++){
+            for(int j = 0; j < length; j++){
+                if(to_digit_host(data[j], block) == d){
+                    local_sort[index] = data[j];
+                    index ++;
+                    bucket[block*10+d] --;
+                }
+    
+                if(bucket[block*10+d] == 0) {
+                    // printf("\n");
+                    break;
+                }    
+            }
+        }    
+    }
     for(int i =0; i < 10; i++){
         for(int j = 0; j < length; j++){
             if(to_digit_host(data[j], digit) == i){
