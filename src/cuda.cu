@@ -60,7 +60,7 @@ void count_to_bucket(int * data, int * bucket, int length, int digit){
 
 __host__
 void countSort(int * data, int * bucket, int length, int digit){
-    int *local_sort = malloc (length * sizeof(int));
+    int *local_sort = (int*) malloc (length * sizeof(int));
     int index = 0;
 
     // sort
