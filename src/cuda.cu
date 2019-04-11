@@ -5,7 +5,8 @@
 __host__ void rng(int* arr, int n); /* Seed function */
 __host__ int max_el(int * vec, int n);
 __host__ int num_digit(int el);
-__device__ void to_digit(int el, int divider, int * digit_num);
+__device__ int to_digit(int el, int divider);
+__host__ int to_digit_host(int el, int divider);
 __host__ void print_array(int * array, int n);
 __global__ void count_to_bucket(int * data, int * bucket, int length, int digit);
 __host__ void countSort(int * data, int * bucket, int length, int digit);
@@ -59,14 +60,14 @@ void count_to_bucket(int * data, int * bucket, int length, int digit){
 
 __host__
 void countSort(int * data, int * bucket, int length, int digit){
-    int * local_sort = malloc (length * sizeof(int));
+    int *local_sort = malloc (length * sizeof(int));
     int index = 0;
 
     // sort
     // printf("local sort ");
     for(int i =0; i < 10; i++){
         for(int j = 0; j < length; j++){
-            if(to_digit(data[j], digit) == i){
+            if(to_digit_host(data[j], digit) == i){
                 local_sort[index] = data[j];
                 index ++;
                 bucket[i] --;
@@ -116,11 +117,19 @@ int max_el(int * vec, int n){
 };
 
 __device__
-void to_digit(int el, int divider, int * digit_num){
+int to_digit(int el, int divider){
     for(int i = 1; i< divider; i++){
         el /= 10;
     }
-    *digit_num = el % 10;
+    return el % 10;
+};
+
+__host__ 
+int to_digit_host(int el, int divider){
+    for(int i = 1; i< divider; i++){
+        el /= 10;
+    }
+    return el % 10;
 };
 
 __host__
