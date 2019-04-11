@@ -46,46 +46,46 @@ int main(int argc,char *argv[]) {
     return 0;
 } 
 
-__global__
-void count_to_bucket(int * data, int * bucket, int length, int digit){
-    for(int i = 0; i < length; i++){
-        int num_bucket = to_digit(data[i], digit);
-        // printf("%d [%d] %d\n", data[i], digit,  num_bucket);
-        bucket[num_bucket] ++;
-    }
-};
+// __global__
+// void count_to_bucket(int * data, int * bucket, int length, int digit){
+//     for(int i = 0; i < length; i++){
+//         int num_bucket = to_digit(data[i], digit);
+//         // printf("%d [%d] %d\n", data[i], digit,  num_bucket);
+//         bucket[num_bucket] ++;
+//     }
+// };
 
 
-__global__
-void countSort(int * data, int * bucket, int length, int digit){
-    int * local_sort = malloc (length * sizeof(int));
-    int index = 0;
+// __global__
+// void countSort(int * data, int * bucket, int length, int digit){
+//     int * local_sort = malloc (length * sizeof(int));
+//     int index = 0;
 
-    // sort
-    // printf("local sort ");
-    for(int i =0; i < 10; i++){
-        for(int j = 0; j < length; j++){
-            if(to_digit(data[j], digit) == i){
-                local_sort[index] = data[j];
-                index ++;
-                bucket[i] --;
-            }
+//     // sort
+//     // printf("local sort ");
+//     for(int i =0; i < 10; i++){
+//         for(int j = 0; j < length; j++){
+//             if(to_digit(data[j], digit) == i){
+//                 local_sort[index] = data[j];
+//                 index ++;
+//                 bucket[i] --;
+//             }
 
-            if(bucket[i] == 0) {
-                // printf("\n");
-                break;
-            }
-        }
-    }
-    // printf("index ends in %d \n", index);
+//             if(bucket[i] == 0) {
+//                 // printf("\n");
+//                 break;
+//             }
+//         }
+//     }
+//     // printf("index ends in %d \n", index);
 
-    // copy
-    for(int i=0; i < length; i++){
-        data[i] = local_sort[i];
-    }
-    free(local_sort);
-    empty_bucket(bucket, 10);
-}
+//     // copy
+//     for(int i=0; i < length; i++){
+//         data[i] = local_sort[i];
+//     }
+//     free(local_sort);
+//     empty_bucket(bucket, 10);
+// }
 
 __host__
 void empty_bucket(int * bucket, int size){
