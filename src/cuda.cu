@@ -21,7 +21,10 @@ int main(int argc,char *argv[]) {
 
     printf("flag 1\n");
     int data_size = strtol(argv[1], NULL, 10);
-    int numBlocks = (int) (data_size/1024) + 1;
+    // int numBlocks = (int) (data_size/1024) + 1;
+    int numThread = 1000;
+    float numBlocksFloat = data_size / numThread;
+    int numBlocks = ceil(numBlocksFloat);
     int *global_array;
     int *global_bucket;
     int *local_array;
@@ -43,10 +46,12 @@ int main(int argc,char *argv[]) {
     max_digit = num_digit(max_el(global_array, data_size));
     printf("max digit %d\n", max_digit);
     int bucket_el = base*max_digit;
-    
+
     cudaMallocManaged(&global_bucket, bucket_el*sizeof(int)+1);
     empty_bucket(global_bucket,bucket_el);
-    count_to_bucket<<<1,1>>>(global_array,global_bucket,data_size,0);
+    for(int i = 0; i< base; i++){
+        count_to_bucket<<<numBlocks,numThread>>>(global_array,global_bucket,data_size,i);
+    }
     // Wait for GPU to finish before accessing on host
     cudaDeviceSynchronize();
     print_array(global_bucket,bucket_el);
@@ -57,7 +62,9 @@ int main(int argc,char *argv[]) {
 
 __global__
 void count_to_bucket(int * data, int * bucket, int length, int digit){
-    for(int i = 0; i < length; i++){
+    int block = blockIdx.x;
+    int thread = threadIdx.x;
+    for(int i = block*thread;  i < block*thread + thread && i < length; i++){
         int num_bucket = to_digit(data[i], digit);
         printf("%d [%d] %d\n", data[i], digit,  num_bucket);
         bucket[num_bucket] ++;
