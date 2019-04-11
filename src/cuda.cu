@@ -21,17 +21,15 @@ int main(int argc,char *argv[]) {
 
     printf("flag 1\n");
     int data_size = strtol(argv[1], NULL, 10);
-    // int numBlocks = (int) (data_size/1024) + 1;
-    int numThread = 1000;
-    float numBlocksFloat = data_size / numThread;
+    int numThread = data_size;
+    float numBlocksFloat = (float) data_size / numThread;
     int numBlocks = ceil(numBlocksFloat);
     int *global_array;
     int *global_bucket;
-    int *local_array;
     int max_digit;
     int base= 10;
-
-    printf("flag 2\n");
+	 printf("data size : %d\n%.f\n", data_size,numBlocksFloat);
+    printf("flag 2 thread %d block %d \n", numThread, numBlocks);
     // aloocating array to be accessible by both cpu and gpu
     cudaMallocManaged(&global_array, data_size*sizeof(int)+1);
     // cudaMalloc(&local_array,data_size*sizeof(int)+1);
@@ -49,8 +47,7 @@ int main(int argc,char *argv[]) {
 
     cudaMallocManaged(&global_bucket, bucket_el*sizeof(int)+1);
     empty_bucket(global_bucket,bucket_el);
-    for(int i = 0; i< base; i++){
-        printf("flag 5\n");
+    for(int i = 1; i<= base; i++){
         count_to_bucket<<<numBlocks,numThread>>>(global_array,global_bucket,data_size,i);
     }
     // Wait for GPU to finish before accessing on host
@@ -66,7 +63,7 @@ void count_to_bucket(int * data, int * bucket, int length, int digit){
     int block = blockIdx.x;
     int thread = threadIdx.x;
     printf("block %d thread %d\n", block, thread);
-    for(int i = block*thread;  i < block*thread + thread && i < length; i++){
+    for(int i = (digit-1)*thread; i < length; i++){
         int num_bucket = to_digit(data[i], digit);
         printf("%d [%d] %d\n", data[i], digit,  num_bucket);
         bucket[num_bucket] ++;
